@@ -11,6 +11,26 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  // السماح للتطبيق بالعمل داخل iframe (لتضمينه في Google Sites وغيرها)
+  // ملاحظة: headers في vercel.json ستتحكم في frame-ancestors المسموح بها
+  async headers() {
+    return [
+      {
+        source: "/(.*)",
+        headers: [
+          {
+            key: "Content-Security-Policy",
+            value:
+              "frame-ancestors 'self' https://sites.google.com https://*.sites.google.com https://*.google.com;",
+          },
+          {
+            key: "X-Frame-Options",
+            value: "ALLOWALL",
+          },
+        ],
+      },
+    ];
+  },
 };
 
 export default nextConfig;
